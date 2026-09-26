@@ -1,0 +1,9 @@
+[package]
+name = "vulnFuzz"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+goblin = "0.10.7"
+derivative = "2.2.0"
+capstone = "0.14" 
