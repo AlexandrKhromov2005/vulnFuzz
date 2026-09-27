@@ -28,7 +28,7 @@ pub enum FlowKind {
 }
 
 /// function for disassembling section
-pub fn vF_disasm_raw_bytes(sect: loader::Section) -> Result<Vec<Instruction>, Box<dyn Error>> {
+pub fn vF_disasm_raw_bytes(sect: &loader::Section) -> Result<Vec<Instruction>, Box<dyn Error>> {
     let cs = Capstone::new()
         .x86()
         .mode(arch::x86::ArchMode::Mode64)
