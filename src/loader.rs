@@ -5,6 +5,8 @@ use std::{error::Error, fs};
 use goblin::elf::{section_header::SHF_EXECINSTR};
 use derivative::Derivative;
 
+use crate::disasm::{Operand, vF_disasm_raw_bytes};
+
 /// structure for executable section 
 /// address - virtual address of section
 /// bytes - bytes contained in section
@@ -84,4 +86,37 @@ pub fn vF_get_section_bytes(code_image : &CodeImage, addr : u64) -> Option<Vec<u
     }
 
     None    
+}
+
+/// helps find _main especially in stripped binary
+pub fn vF_find_main(code_image : &CodeImage) -> Option<u64> {
+    let mut insns = Vec::new();
+    for section in code_image.sections.clone() {
+        if section.address <= code_image.entry && code_image.entry < section.address + (section.bytes.len() as u64) {
+            insns = vF_disasm_raw_bytes(&section).unwrap();
+            break;
+        }
+    }
+
+    for insn in &insns {
+        if insn.mnemonic == "lea" || insn.mnemonic == "mov" {
+            if let Some(Operand::Reg(reg)) = insn.operands_detail.iter().find(|x| matches!(x, Operand::Reg(..))) {
+                if reg == "rdi" {
+                    match insn.mnemonic.as_str() {
+                        "mov" => {
+                            let Some(Operand::Imm(x)) = insn.operands_detail.iter().find(|x| matches!(x, Operand::Imm(..))) else { continue };
+                            return Some(*x as u64);
+                        },
+                        "lea" => {
+                            let Some(Operand::Mem{disp, ..}) = insn.operands_detail.iter().find(|x| matches!(x, Operand::Mem{..})) else { continue };
+                            return Some(insn.address + (insn.size as u64) + (*disp as u64));
+                        },
+                        _ => {},
+                    }
+                }
+            }
+        }
+    }
+
+    None
 }
