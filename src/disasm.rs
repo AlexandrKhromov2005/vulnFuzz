@@ -16,6 +16,16 @@ pub struct Instruction {
     pub operands: String,
     pub flow: FlowKind,
     pub target: Option<u64>, // address of branch where execution go next
+    pub operands_detail: Vec<Operand>,
+}
+
+#[derive(Derivative, Clone)]
+#[derivative(Debug)] 
+pub enum Operand {
+    Reg(String),        // "rdi"
+    Imm(i64),
+    Mem { base: String, disp: i64 },  // base="rip", disp=...
+    Other,
 }
 
 #[derive(Debug)]
@@ -68,6 +78,19 @@ pub fn vF_disasm_raw_bytes(sect: &loader::Section) -> Result<Vec<Instruction>, B
                 }
             }
         }
+
+        let mut operands_detail = Vec::new();
+        if let Some(x86) = detail.arch_detail().x86() {
+            for op in x86.operands() {
+                operands_detail.push(match op.op_type {
+                    X86OperandType::Reg(id) => Operand::Reg(cs.reg_name(id).unwrap_or_default()),
+                    X86OperandType::Imm(v) => Operand::Imm(v),
+                    X86OperandType::Mem(m) => Operand::Mem { base: cs.reg_name(m.base()).unwrap_or_default(), disp: m.disp() },
+                    X86OperandType::Invalid => Operand::Other,
+                });
+            }
+        }
+
         instructions.push(Instruction {
             address: insn.address(),
             size: insn.bytes().len() as u8,
@@ -76,6 +99,7 @@ pub fn vF_disasm_raw_bytes(sect: &loader::Section) -> Result<Vec<Instruction>, B
             operands: insn.op_str().unwrap_or("").to_string(),
             flow,
             target,
+            operands_detail,
         });
     }
 
