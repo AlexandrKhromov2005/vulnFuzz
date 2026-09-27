@@ -1,5 +1,5 @@
 use std::error::Error;
-use capstone::{InsnGroupType, prelude::*};
+use capstone::{InsnGroupType, arch::x86::X86OperandType, prelude::*};
 use derivative::Derivative;
 
 use crate::loader;
@@ -15,7 +15,7 @@ pub struct Instruction {
     pub mnemonic: String,
     pub operands: String,
     pub flow: FlowKind,
-    pub target: Option<u64>,
+    pub target: Option<u64>, // address of branch where execution go next
 }
 
 #[derive(Debug)]
@@ -58,8 +58,16 @@ pub fn vF_disasm_raw_bytes(sect: loader::Section) -> Result<Vec<Instruction>, Bo
             flow = FlowKind::Return;
         }
 
-        let target = None;
-
+        let mut target = None;
+        if matches!(flow, FlowKind::Jump | FlowKind::CondJump | FlowKind::Call) {
+            if let Some(x86) = detail.arch_detail().x86() {
+                if let Some(op) = x86.operands().next() {
+                    if let X86OperandType::Imm(v) = op.op_type {
+                        target = Some(v as u64);
+                    }
+                }
+            }
+        }
         instructions.push(Instruction {
             address: insn.address(),
             size: insn.bytes().len() as u8,
