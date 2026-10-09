@@ -81,7 +81,7 @@ pub fn vF_load(path_to_binary : &str) -> Result<CodeImage, Box<dyn Error>> {
 pub fn vF_get_section_bytes(code_image : &CodeImage, addr : u64) -> Option<Vec<u8>> {
     for section in &code_image.sections {
         if addr == section.address {
-            Some(section.bytes.clone());
+            return Some(section.bytes.clone());
         }
     }
 
