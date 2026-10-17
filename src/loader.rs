@@ -39,6 +39,23 @@ pub fn vF_load(path_to_binary : &str) -> Result<CodeImage, Box<dyn Error>> {
     let mut code_image = CodeImage::default();
     let buffer = fs::read(path_to_binary)?; 
     let elf = Elf::parse(&buffer)?;
+    
+    // --- Added explicit ELF64, x86-64 and byte order checks ---
+    // Check if it's an ELF64 file
+    if elf.header.e_ident[4] != 2 {
+        return Err("Not an ELF64 file".into());
+    }
+    
+    // Check if it's for the x86-64 architecture
+    if elf.header.e_machine != goblin::elf::header::EM_X86_64 {
+        return Err("Not an x86-64 binary".into());
+    }
+    
+    // Check byte order (endianness)
+    if elf.header.e_ident[5] != 1 {
+        return Err("Not little-endian binary".into());
+    }
+    
     code_image.entry = elf.entry; // get entry of efl
     // --- checking for PIE ---
     let is_et_dyn = elf.header.e_type == goblin::elf::header::ET_DYN; // find ET_DYN in binary
