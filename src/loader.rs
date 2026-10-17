@@ -42,8 +42,8 @@ pub fn vF_load(path_to_binary : &str) -> Result<CodeImage, Box<dyn Error>> {
     
     // --- Added explicit ELF64, x86-64 and byte order checks ---
     // Check if it's an ELF64 file
-    if elf.header.e_ident[4] != 2 {
-        return Err("Not an ELF64 file".into());
+    if elf.header.e_ident[4] != goblin::elf::header::ELFCLASS64 {
+        return Err(format!("Not an ELF64 file: expected {}, found {}", goblin::elf::header::ELFCLASS64, elf.header.e_ident[4]).into());
     }
     
     // Check if it's for the x86-64 architecture
@@ -52,8 +52,8 @@ pub fn vF_load(path_to_binary : &str) -> Result<CodeImage, Box<dyn Error>> {
     }
     
     // Check byte order (endianness)
-    if elf.header.e_ident[5] != 1 {
-        return Err("Not little-endian binary".into());
+    if elf.header.e_ident[5] != goblin::elf::header::ELFDATA2LSB {
+        return Err(format!("Not little-endian binary: expected {}, found {}", goblin::elf::header::ELFDATA2LSB, elf.header.e_ident[5]).into());
     }
     
     code_image.entry = elf.entry; // get entry of efl
