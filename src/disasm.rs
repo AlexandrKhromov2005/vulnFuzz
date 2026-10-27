@@ -2,8 +2,6 @@ use std::error::Error;
 use capstone::{InsnGroupType, arch::x86::X86OperandType, prelude::*};
 use derivative::Derivative;
 
-use crate::loader;
-
 /// structure useful duplicate of capstone::Instruction
 #[derive(Derivative)]
 #[derivative(Debug)] 
@@ -24,7 +22,7 @@ pub struct Instruction {
 pub enum Operand {
     Reg(String),        // "rdi"
     Imm(i64),
-    Mem { base: String, disp: i64 },  // base="rip", disp=...
+    Mem { base: String, index: String, disp: i64 },  // base="rip", disp=...
     Other,
 }
 
@@ -37,8 +35,27 @@ pub enum FlowKind {
     Return,
 }
 
-/// function for disassembling section
-pub fn vF_disasm_raw_bytes(sect: &loader::Section) -> Result<Vec<Instruction>, Box<dyn Error>> {
+/// Linear decoding of an input prefix; an undecodable suffix is never skipped.
+#[derive(Debug)]
+pub struct Disassembly {
+    pub instructions: Vec<Instruction>,
+    pub decoded_bytes: usize,
+    /// Undecoded ELF VA range [start, end); empty iff the input was fully decoded.
+    pub remaining: std::ops::Range<u64>,
+}
+
+impl Disassembly {
+    pub fn is_complete(&self) -> bool {
+        self.remaining.is_empty()
+    }
+}
+
+/// Decode file-backed x86-64 bytes at their initial ELF VA (no PIE load bias).
+/// Success may contain only a prefix: always inspect remaining/is_complete().
+/// Empty input is complete. Address-range overflow returns an error.
+pub fn vF_disasm_raw_bytes(bytes: &[u8], address: u64) -> Result<Disassembly, Box<dyn Error>> {
+    let end = address.checked_add(u64::try_from(bytes.len())?)
+        .ok_or("Disassembly VA + input length overflows u64")?;
     let cs = Capstone::new()
         .x86()
         .mode(arch::x86::ArchMode::Mode64)
@@ -47,8 +64,9 @@ pub fn vF_disasm_raw_bytes(sect: &loader::Section) -> Result<Vec<Instruction>, B
         .detail(true)
         .build()?;
 
-    let cs_insns = cs.disasm_all(&sect.bytes, sect.address)?;
+    let cs_insns = cs.disasm_all(bytes, address)?;
     let mut instructions = Vec::with_capacity(cs_insns.len());
+    let mut decoded_bytes = 0;
 
     for insn in cs_insns.iter() {
         let detail = cs.insn_detail(insn)?;
@@ -85,12 +103,13 @@ pub fn vF_disasm_raw_bytes(sect: &loader::Section) -> Result<Vec<Instruction>, B
                 operands_detail.push(match op.op_type {
                     X86OperandType::Reg(id) => Operand::Reg(cs.reg_name(id).unwrap_or_default()),
                     X86OperandType::Imm(v) => Operand::Imm(v),
-                    X86OperandType::Mem(m) => Operand::Mem { base: cs.reg_name(m.base()).unwrap_or_default(), disp: m.disp() },
+                    X86OperandType::Mem(m) => Operand::Mem { base: cs.reg_name(m.base()).unwrap_or_default(), index: cs.reg_name(m.index()).unwrap_or_default(), disp: m.disp() },
                     X86OperandType::Invalid => Operand::Other,
                 });
             }
         }
 
+        decoded_bytes += insn.bytes().len();
         instructions.push(Instruction {
             address: insn.address(),
             size: insn.bytes().len() as u8,
@@ -103,5 +122,6 @@ pub fn vF_disasm_raw_bytes(sect: &loader::Section) -> Result<Vec<Instruction>, B
         });
     }
 
-    Ok(instructions)
+    Ok(Disassembly { instructions, decoded_bytes,
+        remaining: address + u64::try_from(decoded_bytes)?..end })
 }
