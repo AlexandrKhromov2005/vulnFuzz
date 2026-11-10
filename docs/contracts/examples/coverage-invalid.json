@@ -1,0 +1,23 @@
+{
+  "schema_version": "vulnFuzz/v2",
+  "artifact": "coverage_snapshot",
+  "episode_id": "episode-0000000000000002",
+  "step_id": "step-0000000000000012",
+  "binary_id": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+  "mapping_id": "map-0000000000000002",
+  "analysis_revision": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee",
+  "covered_blocks": [],
+  "unmapped_guest_vas": [
+    "0xffffffffffffffff"
+  ],
+  "unknown_overflow": false,
+  "quality": "invalid",
+  "errors": [
+    {
+      "kind": "identity_mismatch",
+      "field": "analysis_revision",
+      "expected": "sha256:6e85000e871f81869f1657b8a6d2bd30ad19cb8fe015f9daafe337ab269ec1a9",
+      "actual": "sha256:eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee"
+    }
+  ]
+}

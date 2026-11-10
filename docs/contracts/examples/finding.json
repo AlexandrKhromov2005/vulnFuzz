@@ -1,0 +1,56 @@
+{
+  "schema_version": "vulnFuzz/v2",
+  "artifact": "finding",
+  "finding_id": "finding-00000001",
+  "level": "dse_validated_trigger",
+  "title": "Two-byte stdin condition enables a separate output path",
+  "scenario_id": "sha256:314db9e6293e66b55bf405b0b8c0517f9ca08db651cbddce0359c13d8c556ebf",
+  "action_index": 4,
+  "block_id": {
+    "binary_id": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+    "start_elf_va": "0x0000000000001020"
+  },
+  "mapping_id": "map-0000000000000002",
+  "dse_attempt_id": "dse-attempt-00000001",
+  "minimal_pair": {
+    "baseline_scenario_id": "sha256:3d9d60e3c841cfd0918953c619e683ea49c16283524124fbd7827efd2ebae523",
+    "trigger_scenario_id": "sha256:314db9e6293e66b55bf405b0b8c0517f9ca08db651cbddce0359c13d8c556ebf",
+    "changed_source": {
+      "action_index": 4,
+      "field": "stdin",
+      "offset": 0,
+      "length": 2
+    },
+    "baseline_episodes": [
+      "episode-0000000000000001",
+      "episode-0000000000000003",
+      "episode-0000000000000004"
+    ],
+    "trigger_episodes": [
+      "episode-0000000000000002",
+      "episode-0000000000000005",
+      "episode-0000000000000006"
+    ]
+  },
+  "effects": [
+    {
+      "kind": "stdout",
+      "attribution": "confirmed",
+      "data_hex": "545249474745520a",
+      "truncated": false
+    }
+  ],
+  "anomaly_score": {
+    "value": 92,
+    "factors": [
+      "dse_validated_branch",
+      "controlled_minimal_pair",
+      "repeated_new_output"
+    ]
+  },
+  "candidate_verdict": "potential_undeclared_behavior",
+  "limitations": [
+    "No external behavioral specification was supplied",
+    "The finding describes the tested deterministic VM profile only"
+  ]
+}

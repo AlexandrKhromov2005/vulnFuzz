@@ -1,0 +1,59 @@
+{
+  "schema_version": "vulnFuzz/v2",
+  "artifact": "dse_attempt",
+  "dse_attempt_id": "dse-attempt-00000001",
+  "target": {
+    "dse_target_id": "dse-target-00000001",
+    "condition_elf_va": "0x000000000000100b",
+    "desired_branch": "taken",
+    "block_id": {
+      "binary_id": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+      "start_elf_va": "0x0000000000001020"
+    }
+  },
+  "source": {
+    "episode_id": "episode-0000000000000001",
+    "step_id": "step-0000000000000005",
+    "scenario_id": "sha256:3d9d60e3c841cfd0918953c619e683ea49c16283524124fbd7827efd2ebae523",
+    "analysis_revision": "sha256:6e85000e871f81869f1657b8a6d2bd30ad19cb8fe015f9daafe337ab269ec1a9"
+  },
+  "sources": [
+    {
+      "action_index": 4,
+      "field": "stdin",
+      "offset": 0,
+      "length": 2
+    }
+  ],
+  "limits": {
+    "max_trace_instructions": 50000,
+    "max_constraints": 2000,
+    "solver_timeout_ms": 5000
+  },
+  "unsupported_operations": [],
+  "solver": {
+    "name": "z3",
+    "version": "4.13.0",
+    "result": "sat",
+    "duration_ms": 12,
+    "model": {
+      "stdin[0:2]": "5a5a"
+    }
+  },
+  "context_patch": [
+    {
+      "source_id": {
+        "action_index": 4,
+        "field": "stdin",
+        "offset": 0,
+        "length": 2
+      },
+      "value_hex": "5a5a"
+    }
+  ],
+  "patched_scenario_id": "sha256:314db9e6293e66b55bf405b0b8c0517f9ca08db651cbddce0359c13d8c556ebf",
+  "validation_episode_id": "episode-0000000000000002",
+  "reached": true,
+  "stop_reason": "reached",
+  "errors": []
+}

@@ -1,0 +1,64 @@
+{
+  "schema_version": "vulnFuzz/v2",
+  "artifact": "test_case",
+  "scenario_id": "sha256:3d9d60e3c841cfd0918953c619e683ea49c16283524124fbd7827efd2ebae523",
+  "vm": {
+    "image_id": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+    "initial_snapshot_id": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+    "profile": "linux-x86_64-deterministic-v1",
+    "machine": "pc-i440fx-10.1",
+    "cpu": "qemu64",
+    "memory_bytes": 1073741824,
+    "initial_clock_ns": "0x0000000000000000",
+    "devices": [
+      "virtio-blk",
+      "virtio-serial-agent"
+    ]
+  },
+  "target": {
+    "path": "/opt/target/bin/app",
+    "binary_id": "sha256:3333333333333333333333333333333333333333333333333333333333333333"
+  },
+  "actions": [
+    {
+      "action_id": "action-00000001",
+      "kind": "write_file",
+      "path": "/tmp/vf-work/config",
+      "data_hex": "41",
+      "mode": 420
+    },
+    {
+      "action_id": "action-00000002",
+      "kind": "set_env",
+      "name": "MODE",
+      "value_hex": "31"
+    },
+    {
+      "action_id": "action-00000003",
+      "kind": "advance_clock",
+      "delta_ns": "0x000000003b9aca00"
+    },
+    {
+      "action_id": "action-00000004",
+      "kind": "spawn_process",
+      "process_ref": "main",
+      "argv_hex": [
+        "2f6f70742f7461726765742f62696e2f617070",
+        "2d2d72756e"
+      ],
+      "cwd": "/tmp/vf-work"
+    },
+    {
+      "action_id": "action-00000005",
+      "kind": "write_stdin",
+      "process_ref": "main",
+      "data_hex": "4142",
+      "close_after": true
+    },
+    {
+      "action_id": "action-00000006",
+      "kind": "checkpoint",
+      "label": "after-input"
+    }
+  ]
+}

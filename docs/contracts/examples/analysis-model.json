@@ -1,0 +1,106 @@
+{
+  "schema_version": "vulnFuzz/v2",
+  "artifact": "analysis_model",
+  "binary_id": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+  "analysis_revision": "sha256:6e85000e871f81869f1657b8a6d2bd30ad19cb8fe015f9daafe337ab269ec1a9",
+  "analyzer": {
+    "name": "vulnFuzz",
+    "version": "0.2.0"
+  },
+  "parameters": {
+    "isa": "x86_64",
+    "static_recursive_descent": true,
+    "dynamic_block_validation": true
+  },
+  "executable_ranges": [
+    {
+      "start_elf_va": "0x0000000000001000",
+      "end_elf_va": "0x0000000000001100",
+      "file_offset": "0x0000000000001000",
+      "file_size": "0x0000000000000100",
+      "memory_size": "0x0000000000000200"
+    }
+  ],
+  "blocks": [
+    {
+      "id": {
+        "binary_id": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+        "start_elf_va": "0x0000000000001000"
+      },
+      "end_elf_va": "0x0000000000001010",
+      "instruction_start_elf_vas": [
+        "0x0000000000001000",
+        "0x0000000000001008",
+        "0x000000000000100b"
+      ],
+      "confidence": "validated",
+      "source": "dynamic"
+    },
+    {
+      "id": {
+        "binary_id": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+        "start_elf_va": "0x0000000000001010"
+      },
+      "end_elf_va": "0x0000000000001015",
+      "instruction_start_elf_vas": [
+        "0x0000000000001010"
+      ],
+      "confidence": "validated",
+      "source": "dynamic"
+    },
+    {
+      "id": {
+        "binary_id": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+        "start_elf_va": "0x0000000000001020"
+      },
+      "end_elf_va": "0x0000000000001021",
+      "instruction_start_elf_vas": [
+        "0x0000000000001020"
+      ],
+      "confidence": "speculative",
+      "source": "static"
+    }
+  ],
+  "edges": [
+    {
+      "from": {
+        "binary_id": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+        "start_elf_va": "0x0000000000001000"
+      },
+      "kind": "fallthrough",
+      "site_elf_va": "0x000000000000100b",
+      "to": {
+        "binary_id": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+        "start_elf_va": "0x0000000000001010"
+      }
+    },
+    {
+      "from": {
+        "binary_id": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+        "start_elf_va": "0x0000000000001000"
+      },
+      "kind": "taken",
+      "site_elf_va": "0x000000000000100b",
+      "to": {
+        "binary_id": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+        "start_elf_va": "0x0000000000001020"
+      }
+    },
+    {
+      "from": {
+        "binary_id": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+        "start_elf_va": "0x0000000000001010"
+      },
+      "kind": "unresolved",
+      "site_elf_va": "0x0000000000001010",
+      "unresolved_reason": "indirect_jump"
+    }
+  ],
+  "unknown_regions": [
+    {
+      "start_elf_va": "0x0000000000001030",
+      "end_elf_va": "0x0000000000001040",
+      "reason": "unexplored"
+    }
+  ]
+}

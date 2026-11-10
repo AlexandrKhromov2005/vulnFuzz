@@ -1,0 +1,48 @@
+{
+  "schema_version": "vulnFuzz/v2",
+  "artifact": "campaign_manifest",
+  "vm_image_id": "sha256:1111111111111111111111111111111111111111111111111111111111111111",
+  "initial_snapshot_id": "sha256:2222222222222222222222222222222222222222222222222222222222222222",
+  "target_binary_id": "sha256:3333333333333333333333333333333333333333333333333333333333333333",
+  "initial_scenario_id": "sha256:3d9d60e3c841cfd0918953c619e683ea49c16283524124fbd7827efd2ebae523",
+  "analysis_revisions": [
+    "sha256:6e85000e871f81869f1657b8a6d2bd30ad19cb8fe015f9daafe337ab269ec1a9"
+  ],
+  "tool_sha256": "sha256:8888888888888888888888888888888888888888888888888888888888888888",
+  "qemu_sha256": "sha256:4444444444444444444444444444444444444444444444444444444444444444",
+  "agent_sha256": "sha256:5555555555555555555555555555555555555555555555555555555555555555",
+  "solver": {
+    "name": "z3",
+    "version": "4.13.0",
+    "sha256": "sha256:9999999999999999999999999999999999999999999999999999999999999999"
+  },
+  "toolchain": {
+    "rustc": "1.97.1",
+    "cargo": "1.97.1",
+    "qemu": "pinned-fork-v1"
+  },
+  "config": {
+    "vm_profile": "linux-x86_64-deterministic-v1",
+    "rng_seed": 42,
+    "max_episodes": 10000,
+    "max_target_execs": 20000,
+    "max_wall_time_ms": 3600000,
+    "max_virtual_time_ns": "0x00000002540be400",
+    "max_solver_calls": 500,
+    "max_solver_time_ms": 300000,
+    "max_actions_per_scenario": 64,
+    "max_input_bytes_per_field": 4096
+  },
+  "counters": {
+    "episodes": 10000,
+    "target_execs": 12000,
+    "solver_calls": 200,
+    "solver_sat": 80,
+    "solver_unsat": 40,
+    "solver_timeouts": 20,
+    "findings": 1,
+    "replay_failures": 0
+  },
+  "status": "completed",
+  "stop_reason": "max_episodes"
+}
