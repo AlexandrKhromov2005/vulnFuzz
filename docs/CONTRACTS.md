@@ -1,6 +1,8 @@
 # Контракты vulnFuzz v2
 
-Статус: **draft VF-01**, 10.11.2026. Версия v2 заменяет draft v1 до начала реализации: единицей анализа становится сценарий цепочки VM-состояний, а не один входной файл. Физический 512-байтовый mmap ABI v1 не утверждён и не должен использоваться как готовая спецификация.
+Статус: **реализация VF-01 готова к ревью**, 14.11.2026. Версия v2 заменяет draft v1: единицей анализа становится сценарий цепочки VM-состояний, а не один входной файл. Физический 512-байтовый mmap ABI v1 не утверждён и не должен использоваться как готовая спецификация.
+
+Rust-модель находится в `src/model.rs`, проверки примеров и ошибочных случаев — в `tests/contracts.rs`. Реализованы строгий JSON v2, типизированные IDs и HexU64, канонические ScenarioId/AnalysisRevision, перекрёстная валидация ссылок и ContextPatch. Окончательное утверждение Contracts v2 остаётся за ревью ролей A/B/C/D и согласованием с QEMU-spike VF-02.
 
 Нормативная область: исследовательский MVP из [ROADMAP.md](../ROADMAP.md), Linux x86-64 guest, qemu-system и qemu-user, guest agent, детерминированные snapshots, concolic DSE процесса с Z3. Слова **MUST**, **MUST NOT**, **SHOULD** обозначают обязательное требование, запрет и рекомендацию.
 
@@ -170,7 +172,7 @@ AnalysisModel может расти между episodes. Проценты пок
 
 `InterfaceHint` содержит `kind=stdin|file|env|cwd|clock|network|ipc|process`, source Episode/Step, наблюдение, `confidence=hint|confirmed|unsupported` и созданные действия. Сеть/IPC в MVP записываются как `unsupported_source` и не мутируются.
 
-`EffectEvent` содержит EpisodeId, StepId, атрибутированный process/mapping, `kind=stdout|stderr|file_read|file_write|process|network|clock|exit|signal`, данные или digest, truncation и `attribution=confirmed|suspected|unknown`.
+`EffectEvent` содержит EpisodeId, StepId, атрибутированный process/mapping, `kind=stdout|stderr|file_read|file_write|process|network|clock|exit|signal`, данные или digest, truncation и `attribution=confirmed|suspected|unknown`. Внутри `StepResult` EpisodeId/StepId наследуются от шага; если они продублированы в событии, значения обязаны совпадать.
 
 Эффект с `attribution!=confirmed` не повышает уровень Finding самостоятельно. Фоновая активность VM не приписывается цели без доказательства. Digest не заменяет сохранённые минимальные доказательства для controlled trigger.
 

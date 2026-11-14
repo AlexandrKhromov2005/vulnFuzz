@@ -89,6 +89,12 @@
         },
         "guest_start": "0x0000555555555000",
         "guest_end": "0x0000555555555100",
+        "executable_ranges": [
+          {
+            "guest_start": "0x0000555555555000",
+            "guest_end": "0x0000555555555100"
+          }
+        ],
         "first_seen_step": "step-0000000000000004",
         "last_seen_step": null,
         "source": "agent_and_plugin",

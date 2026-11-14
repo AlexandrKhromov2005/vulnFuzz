@@ -6,4 +6,7 @@ edition = "2024"
 [dependencies]
 goblin = "0.10.7"
 derivative = "2.2.0"
-capstone = "0.14" 
+capstone = "0.14"
+serde = { version = "1.0.229", features = ["derive"] }
+serde_json = "1.0.154"
+sha2 = "0.11.1"

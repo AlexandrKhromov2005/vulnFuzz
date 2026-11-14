@@ -34,6 +34,7 @@
 - `src/loader.rs`: ELF64 little-endian x86-64, ET_EXEC и динамический PIE ET_DYN, загрузка файловых частей `PF_X PT_LOAD`, проверки диапазонов/overflow/alignment/overlap, `read_va`, необязательная подсказка `main`;
 - `src/disasm.rs`: линейное декодирование Capstone, прямые цели, виды потока, операнды и явный неразобранный суффикс;
 - `src/main.rs`: inspection CLI для одного ELF;
+- `src/model.rs` и `tests/contracts.rs`: строгая Rust-модель Contracts v2, канонические идентификаторы, ContextPatch и 9 интеграционных тестов;
 - `src/lib.rs` и `tests/elf.rs`: библиотечная цель, 14 интеграционных тестов и doctest, включая PIE/non-PIE и sectionless ELF.
 
 Проверки на момент аудита: `cargo test --locked` проходит; `cargo fmt --all -- --check` и строгий Clippy не проходят. QEMU в среде не установлен.
