@@ -37,7 +37,7 @@
 - `src/model.rs` и `tests/contracts.rs`: строгая Rust-модель Contracts v2, канонические идентификаторы, ContextPatch и 9 интеграционных тестов;
 - `src/lib.rs` и `tests/elf.rs`: библиотечная цель, 14 интеграционных тестов и doctest, включая PIE/non-PIE и sectionless ELF.
 
-Проверки на момент аудита: `cargo test --locked` проходит; `cargo fmt --all -- --check` и строгий Clippy не проходят. QEMU в среде не установлен.
+Проверки на момент аудита: `cargo test --locked` проходит; `cargo fmt --all -- --check` и строгий Clippy не проходят. На 19.11.2026 VF-02 spike успешно выполнил по 10 циклов record/replay эффекта на системном и pinned QEMU 9.2.1, а также 10 циклов restore из initial/mid snapshots с CoW-диском. Закреплён исходный QEMU v9.2.1, добавлены build script и upstream-патч для glibc 2.41, но полная приёмка детерминизма не закрыта; см. [DETERMINISM.md](docs/DETERMINISM.md). В рамках VF-03 добавлены binary-safe Protocol 1.0, Linux agent и host client с Unix/stdio/virtio-console transport, spawn/files/stdin/env/cwd, raw mappings, ограниченным захватом вывода и нативными QMP checkpoints; сквозная pinned-QEMU приёмка с CoW-overlay пройдена, карточка ожидает ревью.
 
 Отсутствуют runner, QEMU backend, динамический CFG, VM orchestration, покрытие, фаззер, DSE, кампания, replay и отчёты. Текущий loader/disasm переиспользуются как вспомогательные компоненты, но не определяют границы новой архитектуры.
 

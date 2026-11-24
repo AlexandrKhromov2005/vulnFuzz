@@ -1,2 +1,6 @@
 /target
 /mock_virus
+/build/
+/third_party/qemu/
+__pycache__/
+*.py[cod]

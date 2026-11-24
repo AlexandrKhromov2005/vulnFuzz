@@ -273,7 +273,7 @@ Snapshot descriptor и plugin/agent events должны однозначно с�
 
 ### Guest agent
 
-Кадр содержит версию, длину, Episode/Step, action index, payload length и SHA-256 payload. Ответ дедуплицируется по Episode/Step/request ID. Разрыв, duplicate response и превышение лимита не приводят к повторному деструктивному действию автоматически.
+Кадр содержит версию, длину, Episode/Step, action index, payload length и SHA-256 payload. Ответ дедуплицируется по Episode/Step/request ID. Разрыв, duplicate response и превышение лимита не приводят к повторному деструктивному действию автоматически. Конкретный ABI реализованного framing описан в [AGENT_PROTOCOL.md](AGENT_PROTOCOL.md).
 
 ## 12. Обязательные проверки Contracts v2
 

@@ -14,6 +14,7 @@
 //! # }
 //! ```
 
+pub mod agent;
 pub mod disasm;
 pub mod loader;
 pub mod model;
